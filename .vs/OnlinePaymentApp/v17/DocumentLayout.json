@@ -1,12 +1,37 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\Learning\\Ultimate c#\\OnlinePaymentApp\\",
-  "Documents": [],
+  "WorkspaceRootPath": "D:\\Learning\\dotnet core MVC\\OnlinePaymentApp\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{829BC84C-FFA7-47DC-8283-A51DAD91B4B7}|OnlinePaymentApp\\OnlinePaymentApp.csproj|d:\\learning\\dotnet core mvc\\onlinepaymentapp\\onlinepaymentapp\\onlinepaymentapp.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{829BC84C-FFA7-47DC-8283-A51DAD91B4B7}|OnlinePaymentApp\\OnlinePaymentApp.csproj|solutionrelative:onlinepaymentapp\\onlinepaymentapp.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "OnlinePaymentApp",
+              "DocumentMoniker": "D:\\Learning\\dotnet core MVC\\OnlinePaymentApp\\OnlinePaymentApp\\OnlinePaymentApp.csproj",
+              "RelativeDocumentMoniker": "OnlinePaymentApp\\OnlinePaymentApp.csproj",
+              "ToolTip": "D:\\Learning\\dotnet core MVC\\OnlinePaymentApp\\OnlinePaymentApp\\OnlinePaymentApp.csproj",
+              "RelativeToolTip": "OnlinePaymentApp\\OnlinePaymentApp.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-04-06T01:10:32.485Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }
