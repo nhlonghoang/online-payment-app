@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OnlinePaymentApp.Models;
 
 namespace OnlinePaymentApp.Data
 {
@@ -8,5 +9,7 @@ namespace OnlinePaymentApp.Data
         {
             
         }
+
+        public DbSet<Category> Categories { get; set; }
     }
 }
