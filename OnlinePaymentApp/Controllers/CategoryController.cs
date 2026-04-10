@@ -18,5 +18,16 @@ namespace OnlinePaymentApp.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public IActionResult Create(Category obj)
+        {
+            if (ModelState.IsValid)  // Check model validation
+            {
+                _db.Categories.Add(obj);
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(); // error automatically go with the view
+        }
     }
 }
