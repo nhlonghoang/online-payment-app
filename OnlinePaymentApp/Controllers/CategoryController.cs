@@ -13,5 +13,10 @@ namespace OnlinePaymentApp.Controllers
             List<Category> categories = _db.Categories.ToList();
             return View(categories);
         }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
     }
 }
