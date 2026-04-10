@@ -21,6 +21,10 @@ namespace OnlinePaymentApp.Controllers
         [HttpPost]
         public IActionResult Create(Category obj)
         {
+            if (obj.Name == obj.DisplayOrder.ToString())
+            {
+                ModelState.AddModelError("name", "DisplayOrder can't exactly match the Name");
+            }
             if (ModelState.IsValid)  // Check model validation
             {
                 _db.Categories.Add(obj);
