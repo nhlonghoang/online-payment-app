@@ -1,9 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35919.96 d17.13
+VisualStudioVersion = 17.13.35919.96
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlinePaymentApp", "OnlinePaymentApp\OnlinePaymentApp.csproj", "{829BC84C-FFA7-47DC-8283-A51DAD91B4B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlinePaymentApp.DataAccess", "OnlinePaymentApp.DataAccess\OnlinePaymentApp.DataAccess.csproj", "{7B7D55FE-B0C8-41C0-95C0-A00758B30162}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlinePaymentApp.Models", "OnlinePaymentApp.Models\OnlinePaymentApp.Models.csproj", "{C2A991B5-7F5F-42F3-8E85-FB4E481F25B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlinePaymentApp.Utility", "OnlinePaymentApp.Utility\OnlinePaymentApp.Utility.csproj", "{66A27E76-1227-4B15-8D0C-C4E3F6851382}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{829BC84C-FFA7-47DC-8283-A51DAD91B4B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{829BC84C-FFA7-47DC-8283-A51DAD91B4B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{829BC84C-FFA7-47DC-8283-A51DAD91B4B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B7D55FE-B0C8-41C0-95C0-A00758B30162}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B7D55FE-B0C8-41C0-95C0-A00758B30162}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B7D55FE-B0C8-41C0-95C0-A00758B30162}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B7D55FE-B0C8-41C0-95C0-A00758B30162}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2A991B5-7F5F-42F3-8E85-FB4E481F25B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2A991B5-7F5F-42F3-8E85-FB4E481F25B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2A991B5-7F5F-42F3-8E85-FB4E481F25B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2A991B5-7F5F-42F3-8E85-FB4E481F25B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66A27E76-1227-4B15-8D0C-C4E3F6851382}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66A27E76-1227-4B15-8D0C-C4E3F6851382}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66A27E76-1227-4B15-8D0C-C4E3F6851382}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66A27E76-1227-4B15-8D0C-C4E3F6851382}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
