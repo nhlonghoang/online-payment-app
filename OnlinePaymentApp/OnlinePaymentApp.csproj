@@ -16,4 +16,10 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.23" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\OnlinePaymentApp.DataAccess\OnlinePaymentApp.DataAccess.csproj" />
+    <ProjectReference Include="..\OnlinePaymentApp.Models\OnlinePaymentApp.Models.csproj" />
+    <ProjectReference Include="..\OnlinePaymentApp.Utility\OnlinePaymentApp.Utility.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnlinePaymentApp.Models;
 
-namespace OnlinePaymentApp.Data
+namespace OnlinePaymentApp.DataAcess.Data
 {
     public class ApplicationDbContext : DbContext
     {

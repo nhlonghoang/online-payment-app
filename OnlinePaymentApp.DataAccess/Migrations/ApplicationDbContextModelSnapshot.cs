@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using OnlinePaymentApp.Data;
+using OnlinePaymentApp.DataAcess.Data;
 
 #nullable disable
 
-namespace OnlinePaymentApp.Migrations
+namespace OnlinePaymentApp.DataAcess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot

@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using OnlinePaymentApp.Data;
+using OnlinePaymentApp.DataAcess.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

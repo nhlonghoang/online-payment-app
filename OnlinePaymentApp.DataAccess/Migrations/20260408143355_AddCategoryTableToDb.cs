@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace OnlinePaymentApp.Migrations
+namespace OnlinePaymentApp.DataAcess.Migrations
 {
     /// <inheritdoc />
     public partial class AddCategoryTableToDb : Migration

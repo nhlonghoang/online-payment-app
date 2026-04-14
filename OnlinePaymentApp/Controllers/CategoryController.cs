@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OnlinePaymentApp.Data;
+using OnlinePaymentApp.DataAcess.Data;
 using OnlinePaymentApp.Models;
 
 namespace OnlinePaymentApp.Controllers
