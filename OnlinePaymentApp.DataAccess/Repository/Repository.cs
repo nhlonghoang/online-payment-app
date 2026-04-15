@@ -5,9 +5,10 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using OnlinePaymentApp.DataAccess.Repository.IRepository;
 using OnlinePaymentApp.DataAcess.Data;
 
-namespace OnlinePaymentApp.DataAccess.Repository.IRepository
+namespace OnlinePaymentApp.DataAccess.Repository
 {
     public class Repository<T> : IRepository<T> where T : class
     {
@@ -15,7 +16,7 @@ namespace OnlinePaymentApp.DataAccess.Repository.IRepository
         internal DbSet<T> dbSet; 
         public Repository(ApplicationDbContext db) {
             _db = db;
-            this.dbSet = db.Set<T>(); // DbSet now represent for the whole table of type T
+            dbSet = db.Set<T>(); // DbSet now represent for the whole table of type T
         }
         public void Add(T entity)
         {
