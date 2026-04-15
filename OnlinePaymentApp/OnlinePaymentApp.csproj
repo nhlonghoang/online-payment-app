@@ -22,4 +22,8 @@
     <ProjectReference Include="..\OnlinePaymentApp.Utility\OnlinePaymentApp.Utility.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
 </Project>

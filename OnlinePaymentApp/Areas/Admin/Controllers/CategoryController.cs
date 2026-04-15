@@ -3,15 +3,16 @@ using OnlinePaymentApp.DataAccess.Repository.IRepository;
 using OnlinePaymentApp.DataAcess.Data;
 using OnlinePaymentApp.Models;
 
-namespace OnlinePaymentApp.Controllers
+namespace OnlinePaymentApp.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
-    {
-        private readonly ICategoryRepository _CategoryRepo;
-        public CategoryController(ICategoryRepository db) { _CategoryRepo = db; }
+    {   
+        private readonly IUnitOfWork _unitOfWork;
+        public CategoryController(IUnitOfWork unitOfWork) { _unitOfWork = unitOfWork; }
         public IActionResult Index()
         {
-            List<Category> categories = _CategoryRepo.GetAll().ToList();
+            List<Category> categories = _unitOfWork.CategoryRepository.GetAll().ToList();
             return View(categories);
         }
 
@@ -28,8 +29,8 @@ namespace OnlinePaymentApp.Controllers
             }
             if (ModelState.IsValid)  // Check model validation
             {
-                _CategoryRepo.Add(obj);
-                _CategoryRepo.Save();
+                _unitOfWork.CategoryRepository.Add(obj);
+                _unitOfWork.CategoryRepository.Save();
                 TempData["success"] = "Category created successfully";
                 return RedirectToAction("Index");
             }
@@ -42,7 +43,7 @@ namespace OnlinePaymentApp.Controllers
             {
                 return NotFound();
             }
-            Category categoryFromDb = _CategoryRepo.Get(u=>u.Id==id);
+            Category categoryFromDb = _unitOfWork.CategoryRepository.Get(u=>u.Id==id);
             //Category? categoryFromDb2 = _db.Categories.FirstOrDefault(u => u.Id == id);
             //Category? categoryFromDb3 = _db.Categories.Where(u => u.Id == id).FirstOrDefault();
             if (categoryFromDb == null)
@@ -59,8 +60,8 @@ namespace OnlinePaymentApp.Controllers
           
             if (ModelState.IsValid)  // Check model validation
             {
-                _CategoryRepo.Update(obj);
-                _CategoryRepo.Save();
+                _unitOfWork.CategoryRepository.Update(obj);
+                _unitOfWork.CategoryRepository.Save();
                 TempData["success"] = "Category edited successfully";
                 return RedirectToAction("Index");
             }
@@ -73,7 +74,7 @@ namespace OnlinePaymentApp.Controllers
             {
                 return NotFound();
             }
-            Category categoryFromDb = _CategoryRepo.Get(u => u.Id == id);
+            Category categoryFromDb = _unitOfWork.CategoryRepository.Get(u => u.Id == id);
             if (categoryFromDb == null)
             {
                 return NotFound();
@@ -90,15 +91,15 @@ namespace OnlinePaymentApp.Controllers
                 return NotFound();
             }
 
-            Category? categoryFromDb = _CategoryRepo.Get(u => u.Id == id);
+            Category? categoryFromDb = _unitOfWork.CategoryRepository.Get(u => u.Id == id);
 
             if (categoryFromDb == null)
             {
                 return NotFound();
             }
 
-            _CategoryRepo.Remove(categoryFromDb);
-            _CategoryRepo.Save();
+            _unitOfWork.CategoryRepository.Remove(categoryFromDb);
+            _unitOfWork.CategoryRepository.Save();
             TempData["success"] = "Category deleted successfully";
             return RedirectToAction("Index");
         }
