@@ -9,21 +9,18 @@ using OnlinePaymentApp.Models;
 
 namespace OnlinePaymentApp.DataAccess.Repository
 {
-    public class UnitOfWork : IUnitOfWork
+    public class ProductRepository : Repository<Product>, IProductRepository
     {
-
         private readonly ApplicationDbContext _db;
-        public ICategoryRepository CategoryRepository { get; private set; }
-        public IProductRepository ProductRepository { get; private set; }
-        public UnitOfWork(ApplicationDbContext db)
+
+        public ProductRepository(ApplicationDbContext db) : base(db)
         {
+
             _db = db;
-            CategoryRepository = new CategoryRepository(db);
-            ProductRepository = new ProductRepository(db);
         }
-        public void Save()
+        public void Update(Product obj)
         {
-            _db.SaveChanges();
+            _db.Products.Update(obj);
         }
     }
 }
