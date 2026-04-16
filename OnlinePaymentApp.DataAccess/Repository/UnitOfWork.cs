@@ -21,7 +21,7 @@ namespace OnlinePaymentApp.DataAccess.Repository
         }
         public void Save()
         {
-            CategoryRepository.Save();
+            _db.SaveChanges();
         }
     }
 }

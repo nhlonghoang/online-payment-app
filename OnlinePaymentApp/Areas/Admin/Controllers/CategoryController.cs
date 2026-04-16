@@ -30,7 +30,7 @@ namespace OnlinePaymentApp.Areas.Admin.Controllers
             if (ModelState.IsValid)  // Check model validation
             {
                 _unitOfWork.CategoryRepository.Add(obj);
-                _unitOfWork.CategoryRepository.Save();
+                _unitOfWork.Save();
                 TempData["success"] = "Category created successfully";
                 return RedirectToAction("Index");
             }
@@ -61,7 +61,7 @@ namespace OnlinePaymentApp.Areas.Admin.Controllers
             if (ModelState.IsValid)  // Check model validation
             {
                 _unitOfWork.CategoryRepository.Update(obj);
-                _unitOfWork.CategoryRepository.Save();
+                _unitOfWork.Save();
                 TempData["success"] = "Category edited successfully";
                 return RedirectToAction("Index");
             }
@@ -99,7 +99,7 @@ namespace OnlinePaymentApp.Areas.Admin.Controllers
             }
 
             _unitOfWork.CategoryRepository.Remove(categoryFromDb);
-            _unitOfWork.CategoryRepository.Save();
+            _unitOfWork.Save();
             TempData["success"] = "Category deleted successfully";
             return RedirectToAction("Index");
         }
