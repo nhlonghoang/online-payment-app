@@ -1,10 +1,11 @@
 ﻿@model ProductVM
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
 	<div asp-validation-summary="All"></div> 
+	<input asp-for="Product.Id" hidden />
 	<div class="border-secondary p-3 mt-4">
 		<div class="row">
-			<h2 class="text-primary p-0">Create Product</h2>
+			<h2 class="text-primary p-0">@(Model.Product.Id!=0?"Edit":"Create") Product</h2>
 			<hr class="border-1 ">
 		</div>
 		<div class="row mt-2">
@@ -55,12 +56,18 @@
 		</div>
 		<div class="row mt-2">
 			<label asp-for=Product.ImageUrl class="p-0"></label>
-			<input asp-for=Product.ImageUrl class="form-control" />
+			<input asp-for=Product.ImageUrl class="form-control" type="file" id="formFile" />
 			<span asp-validation-for="Product.ImageUrl" class="text-danger"></span>
 		</div>
 		<div class="row mt-2">
 			<div class="col-6 col-md-3 mt-2">
-				<button type="submit" class="btn btn-primary form-control">Create</button>
+				@if (Model.Product.Id == 0)
+				{
+					<button type="submit" class="btn btn-primary form-control">Create</button>
+				} else
+				{
+					<button type="submit" class="btn btn-primary form-control">Update</button>
+				}
 			</div>
 			<div class="col-6 col-md-3 mt-2">
 				<a asp-controller="Product" asp-action="Index" class="btn btn-secondary btn-outline-light form-control">
