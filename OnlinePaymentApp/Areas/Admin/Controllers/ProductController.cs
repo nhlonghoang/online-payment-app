@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using OnlinePaymentApp.DataAccess.Repository.IRepository;
 using OnlinePaymentApp.DataAcess.Data;
 using OnlinePaymentApp.Models;
@@ -12,12 +13,20 @@ namespace OnlinePaymentApp.Areas.Admin.Controllers
         public ProductController(IUnitOfWork unitOfWork) { _unitOfWork = unitOfWork; }
         public IActionResult Index()
         {
-            List<Product> categories = _unitOfWork.ProductRepository.GetAll().ToList();
-            return View(categories);
+            List<Product> products = _unitOfWork.ProductRepository.GetAll().ToList();
+            return View(products);
         }
 
         public IActionResult Create()
         {
+            IEnumerable<SelectListItem> categoryList = _unitOfWork.CategoryRepository.GetAll().Select(u => new SelectListItem
+            {
+                Text = u.Name,
+                Value = u.Id.ToString()
+            });
+
+            ViewBag.CategoryList = categoryList; // using ViewBag
+            //ViewData["CategoryList"] = categoryList; // using ViewData, need to cast to use
             return View();
         }
         [HttpPost]
@@ -40,8 +49,8 @@ namespace OnlinePaymentApp.Areas.Admin.Controllers
                 return NotFound();
             }
             Product productFromDb = _unitOfWork.ProductRepository.Get(u=>u.Id==id);
-            //Product? productFromDb2 = _db.Categories.FirstOrDefault(u => u.Id == id);
-            //Product? productFromDb3 = _db.Categories.Where(u => u.Id == id).FirstOrDefault();
+            //Product? productFromDb2 = _db.products.FirstOrDefault(u => u.Id == id);
+            //Product? productFromDb3 = _db.products.Where(u => u.Id == id).FirstOrDefault();
             if (productFromDb == null)
             {
                 return NotFound();
