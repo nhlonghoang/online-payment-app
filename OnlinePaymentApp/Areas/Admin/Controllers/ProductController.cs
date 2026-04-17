@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using OnlinePaymentApp.DataAccess.Repository.IRepository;
 using OnlinePaymentApp.DataAcess.Data;
 using OnlinePaymentApp.Models;
+using OnlinePaymentApp.Models.ViewModels;
 
 namespace OnlinePaymentApp.Areas.Admin.Controllers
 {
@@ -25,21 +26,36 @@ namespace OnlinePaymentApp.Areas.Admin.Controllers
                 Value = u.Id.ToString()
             });
 
-            ViewBag.CategoryList = categoryList; // using ViewBag
+            // Using ViewModel to bundle data
+            ProductVM productVM = new()
+            {
+                CategoryList = categoryList,
+                Product = new Product()
+            };
+
+            //ViewBag.CategoryList = categoryList; // using ViewBag
             //ViewData["CategoryList"] = categoryList; // using ViewData, need to cast to use
-            return View();
+            return View(productVM);
         }
         [HttpPost]
-        public IActionResult Create(Product obj)
+        public IActionResult Create(ProductVM productVM)
         {
             if (ModelState.IsValid)  // Check model validation
             {
-                _unitOfWork.ProductRepository.Add(obj);
+                _unitOfWork.ProductRepository.Add(productVM.Product);
                 _unitOfWork.Save();
                 TempData["success"] = "Product created successfully";
                 return RedirectToAction("Index");
             }
-            return View(); // error automatically go with the view
+            else {
+                productVM.CategoryList = _unitOfWork.CategoryRepository.GetAll().Select(u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.Id.ToString()
+                });
+                
+                return View(productVM);
+            }
         }
 
         public IActionResult Edit(int? id)
