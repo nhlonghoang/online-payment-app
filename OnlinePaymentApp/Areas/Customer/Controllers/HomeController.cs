@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using OnlinePaymentApp.DataAccess.Repository.IRepository;
 using OnlinePaymentApp.Models;
 
 namespace OnlinePaymentApp.Areas.Customer.Controllers
@@ -8,15 +9,24 @@ namespace OnlinePaymentApp.Areas.Customer.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork)
         {
             _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
-            return View();
+            List<Product> products = _unitOfWork.ProductRepository.GetAll(includeProperties: "Category").ToList();
+            return View(products);
+        }
+
+        public IActionResult Details(int productId)
+        {
+            Product product = _unitOfWork.ProductRepository.Get(u=>u.Id==productId, includeProperties: "Category");
+            return View(product);
         }
 
         public IActionResult Privacy()
