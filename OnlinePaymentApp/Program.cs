@@ -17,7 +17,17 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
  * using AddIdentity instead DefaultIfEmpty to be able to add role to user, the default one doesn't provide
  * Have to manually add AddDefaultTokenProviders and IEmailSender 
  */
-builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders(); ; 
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders(); ;
+
+/*
+ * Custom redirection when pages redirect is incorrect
+ * must added before builder.Services.AddIdentity
+*/
+builder.Services.ConfigureApplicationCookie(options => {
+    options.LoginPath = $"/Identity/Account/Login";
+    options.LogoutPath = $"/Identity/Account/Logout";
+    options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+});
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();

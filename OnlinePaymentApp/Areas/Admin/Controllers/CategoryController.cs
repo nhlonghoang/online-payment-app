@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OnlinePaymentApp.DataAccess.Repository.IRepository;
 using OnlinePaymentApp.DataAcess.Data;
 using OnlinePaymentApp.Models;
+using OnlinePaymentApp.Utility;
 
 namespace OnlinePaymentApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
     public class CategoryController : Controller
     {   
         private readonly IUnitOfWork _unitOfWork;
