@@ -3,6 +3,8 @@ using OnlinePaymentApp.DataAccess.Repository;
 using OnlinePaymentApp.DataAccess.Repository.IRepository;
 using OnlinePaymentApp.DataAcess.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using OnlinePaymentApp.Utility;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,9 +13,14 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>();
+/*
+ * using AddIdentity instead DefaultIfEmpty to be able to add role to user, the default one doesn't provide
+ * Have to manually add AddDefaultTokenProviders and IEmailSender 
+ */
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders(); ; 
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 
 var app = builder.Build();
