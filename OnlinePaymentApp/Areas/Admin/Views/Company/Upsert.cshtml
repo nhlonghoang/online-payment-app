@@ -1,0 +1,101 @@
+﻿@model Company
+
+<form method="post" enctype="multipart/form-data">
+	<div asp-validation-summary="All"></div> 
+	<input asp-for="Id" hidden />
+	<div class="row">
+		<div class="col-12">
+			<div class="border-secondary p-3 mt-4">
+				<div class="row">
+					<h2 class="text-primary p-0">@(Model.Id != 0 ? "Edit" : "Create") Company</h2>
+					<hr class="border-1 ">
+				</div>
+				<div class="row mt-2">
+					<label asp-for=Name class="p-0"></label>
+					<input asp-for=Name class="form-control" />
+					<span asp-validation-for="Name" class="text-danger"></span>
+				</div>
+				<div class="row mt-2">
+					<label asp-for=PhoneNumber class="p-0"></label>
+					<input asp-for=PhoneNumber class="form-control" />
+					<span asp-validation-for="PhoneNumber" class="text-danger"></span>
+				</div>
+				<div class="row mt-2">
+					<label asp-for=StreetAddress class="p-0"></label>
+					<input asp-for=StreetAddress class="form-control" />
+					<span asp-validation-for="StreetAddress" class="text-danger"></span>
+				</div>
+				<div class="row mt-2">
+					<label asp-for=City class="p-0"></label>
+					<input asp-for=City class="form-control" />
+					<span asp-validation-for="City" class="text-danger"></span>
+				</div>
+				<div class="row mt-2">
+					<label asp-for=State class="p-0"></label>
+					<input asp-for=State class="form-control" />
+					<span asp-validation-for="State" class="text-danger"></span>
+				</div>
+				<div class="row mt-2">
+					<label asp-for=PostalCode class="p-0"></label>
+					<input asp-for=PostalCode class="form-control" />
+					<span asp-validation-for="PostalCode" class="text-danger"></span>
+				</div>
+		
+				<div class="row mt-2">
+					<div class="col-6 col-md-3 mt-2">
+						@if (Model.Id == 0)
+						{
+							<button type="submit" class="btn btn-primary form-control">Create</button>
+						}
+						else
+						{
+							<button type="submit" class="btn btn-primary form-control">Update</button>
+						}
+					</div>
+					<div class="col-6 col-md-3 mt-2">
+						<a asp-controller="Company" asp-action="Index" class="btn btn-secondary btn-outline-light form-control">
+							Back To List
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</form>
+
+
+			@section Scripts{
+				@{
+					<script>
+						tinymce.init({
+						  selector: 'textarea',
+						  plugins: [
+							// Core editing features
+							'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
+							// Your account includes a free trial of TinyMCE premium features
+							// Try the most popular premium features until May 1, 2026:
+							'checklist', 'mediaembed', 'casechange', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'advtemplate', 'tinymceai', 'uploadcare', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown','importword', 'exportword', 'exportpdf'
+						  ],
+						  toolbar: 'undo redo | tinymceai-chat tinymceai-quickactions tinymceai-review | blocks fontfamily fontsize | bold italic underline strikethrough | link media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography uploadcare | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+						  tinycomments_mode: 'embedded',
+						  tinycomments_author: 'Author name',
+						  mergetags_list: [
+							{ value: 'First.Name', title: 'First Name' },
+							{ value: 'Email', title: 'Email' },
+						  ],
+						  tinymceai_token_provider: async () => {
+							await fetch(`https://demo.api.tiny.cloud/1/avnr0dxnvox3z1ljjp9x8fuloqckr4frldv4u6nsfwe0avmq/auth/random`, { method: "POST", credentials: "include" });
+							return { token: await fetch(`https://demo.api.tiny.cloud/1/avnr0dxnvox3z1ljjp9x8fuloqckr4frldv4u6nsfwe0avmq/jwt/tinymceai`, { credentials: "include" }).then(r => r.text()) };
+						  },
+						  uploadcare_public_key: '90bc48a4f649d6b7814e',
+						});
+					</script>				
+					/*
+					 * Automatically find the name in Shared folder because the partial tag
+					 * this automatically generate script validation for client side following serverside validation only.
+					 * Doesn't work with custom validation
+					 */
+					<partial name="_ValidationScriptsPartial" /> 
+				}
+			}
