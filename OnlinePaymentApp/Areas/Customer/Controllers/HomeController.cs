@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using OnlinePaymentApp.DataAccess.Repository.IRepository;
 using OnlinePaymentApp.Models;
@@ -32,6 +34,36 @@ namespace OnlinePaymentApp.Areas.Customer.Controllers
                 ProductId = productId
             };
             return View(cart);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult Details(ShoppingCart shoppingCart)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            shoppingCart.ApplicationUserId = userId;
+
+            ShoppingCart cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.ApplicationUserId == userId &&
+            u.ProductId == shoppingCart.ProductId);
+
+            if (cartFromDb != null)
+            {
+                //shopping cart exists
+                cartFromDb.Count += shoppingCart.Count; // this line automatically update to db if EF tracking is true
+                _unitOfWork.ShoppingCart.Update(cartFromDb);
+            }
+            else
+            {
+                //add cart record
+                _unitOfWork.ShoppingCart.Add(shoppingCart);
+            }
+            TempData["success"] = "Cart updated successfully";
+
+            _unitOfWork.Save();
+
+
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Privacy()
