@@ -11,6 +11,8 @@ namespace OnlinePaymentApp.DataAccess.Repository.IRepository
         ICategoryRepository CategoryRepository { get; }
         IProductRepository ProductRepository { get; }
         ICompanyRepository CompanyRepository { get; }
+        IShoppingCartRepository ShoppingCart { get; }
+        IApplicationUserRepository ApplicationUser { get; }
         void Save();
     }
 }

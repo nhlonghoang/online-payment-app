@@ -16,13 +16,18 @@ namespace OnlinePaymentApp.DataAccess.Repository
         public ICategoryRepository CategoryRepository { get; private set; }
         public IProductRepository ProductRepository { get; private set; }
         public ICompanyRepository CompanyRepository { get; private set; }
+        public IShoppingCartRepository ShoppingCart { get; private set; }
+        public IApplicationUserRepository ApplicationUser { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
+            ShoppingCart = new ShoppingCartRepository(_db);
             CategoryRepository = new CategoryRepository(db);
             ProductRepository = new ProductRepository(db);
             CompanyRepository = new CompanyRepository(_db);
+            ApplicationUser = new ApplicationUserRepository(_db);
+            ShoppingCart = new ShoppingCartRepository(_db);
         }
         public void Save()
         {
