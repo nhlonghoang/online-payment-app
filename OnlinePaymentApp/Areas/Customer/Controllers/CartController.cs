@@ -169,13 +169,16 @@ namespace OnlinePaymentApp.Areas.Customer.Controllers
 
                 var service = new SessionService();
                 Session session = service.Create(options);
-                
-                // Store SessionId and PaymentIntentID to DB
+
+                /*
+                 * have to Store SessionId and PaymentIntentID to DB because we gonna rerdirect to stripe page
+                 * PaymentIntentId may null, need to update again if payment success
+                 */
                 _unitOfWork.OrderHeader.UpdateStripePaymentID(ShoppingCartVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
                 _unitOfWork.Save();
 
 
-                Response.Headers.Add("Location", session.Url);
+                Response.Headers.Add("Location", session.Url); // redirect our web to stripe's checkout payment page
                 return new StatusCodeResult(303);
             }
 
@@ -185,6 +188,33 @@ namespace OnlinePaymentApp.Areas.Customer.Controllers
 
         public IActionResult OrderConfirmation(int id)
         {
+            OrderHeader orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == id, includeProperties: "ApplicationUser");
+            if (orderHeader.PaymentStatus != SD.PaymentStatusDelayedPayment)
+            {
+                //this is an order by customer
+
+                var service = new SessionService();
+                Session session = service.Get(orderHeader.SessionId);
+
+                if (session.PaymentStatus.ToLower() == "paid") // check if payment successfuly
+                {
+                    // Update DB
+                    _unitOfWork.OrderHeader.UpdateStripePaymentID(id, session.Id, session.PaymentIntentId);
+                    _unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
+                    _unitOfWork.Save();
+                }
+
+
+            }
+
+            // clear shopping carts if payments were successful
+            List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart
+                .GetAll(u => u.ApplicationUserId == orderHeader.ApplicationUserId).ToList();
+
+            _unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
+            _unitOfWork.Save();
+
+
             return View(id);
         }
 
