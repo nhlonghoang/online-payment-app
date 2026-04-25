@@ -5,6 +5,7 @@ using OnlinePaymentApp.DataAccess.Repository.IRepository;
 using OnlinePaymentApp.Models;
 using OnlinePaymentApp.Models.ViewModels;
 using OnlinePaymentApp.Utility;
+using Stripe.Checkout;
 
 namespace OnlinePaymentApp.Areas.Customer.Controllers
 {
@@ -136,6 +137,46 @@ namespace OnlinePaymentApp.Areas.Customer.Controllers
             {
                 //it is a regular customer account and we need to capture payment
                 //stripe logic
+
+                var domain = "https://localhost:7059/";
+                var options = new SessionCreateOptions
+                {
+                    SuccessUrl = domain + $"customer/cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",
+                    CancelUrl = domain + "customer/cart/index",
+                    LineItems = new List<SessionLineItemOptions>(),
+                    Mode = "payment",
+                };
+
+                // populate options.LineItems, Stripe need infomation to render products to their UI payment
+                foreach (var item in ShoppingCartVM.ShoppingCartList)
+                {
+                    var sessionLineItem = new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            UnitAmount = (long)(item.Price * 100), // $20.50 => 2050
+                            Currency = "usd",
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = item.Product.Title
+                            }
+                        },
+                        Quantity = item.Count
+                    };
+                    options.LineItems.Add(sessionLineItem);
+                }
+
+
+                var service = new SessionService();
+                Session session = service.Create(options);
+                
+                // Store SessionId and PaymentIntentID to DB
+                _unitOfWork.OrderHeader.UpdateStripePaymentID(ShoppingCartVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
+                _unitOfWork.Save();
+
+
+                Response.Headers.Add("Location", session.Url);
+                return new StatusCodeResult(303);
             }
 
             // redirect to new page
