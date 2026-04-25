@@ -5,6 +5,7 @@ using OnlinePaymentApp.DataAcess.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using OnlinePaymentApp.Utility;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe")); // if StripeSettings have the same properties name with appsetting.json it will automatically populate that fields
+
 
 /*
  * using AddIdentity instead DefaultIfEmpty to be able to add role to user, the default one doesn't provide
@@ -45,7 +48,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 app.UseRouting();
 app.UseAuthentication(); // authentication before authorization
 app.UseAuthorization();
