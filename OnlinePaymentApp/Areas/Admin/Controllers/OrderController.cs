@@ -22,10 +22,31 @@ namespace OnlinePaymentApp.Areas.Admin.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        public IActionResult Index()
+
+        public IActionResult Index(string status)
         {
-            List<OrderHeader> OrderHeaders = _unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser").ToList();
-            return View(OrderHeaders);
+            IEnumerable<OrderHeader> OrderHeaders = _unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser");
+
+            switch (status)
+            {
+                case "pending":
+                    OrderHeaders = OrderHeaders.Where(u => u.PaymentStatus == SD.PaymentStatusDelayedPayment);
+                    break;
+                case "inprocess":
+                    OrderHeaders = OrderHeaders.Where(u => u.OrderStatus == SD.StatusInProcess);
+                    break;
+                case "completed":
+                    OrderHeaders = OrderHeaders.Where(u => u.OrderStatus == SD.StatusShipped);
+                    break;
+                case "approved":
+                    OrderHeaders = OrderHeaders.Where(u => u.OrderStatus == SD.StatusApproved);
+                    break;
+                default:
+                    break;
+
+            }
+
+            return View(OrderHeaders.ToList());
         }
 
 
