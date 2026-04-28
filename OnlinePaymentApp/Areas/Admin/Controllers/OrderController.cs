@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using OnlinePaymentApp.DataAccess.Repository.IRepository;
@@ -6,10 +7,12 @@ using OnlinePaymentApp.DataAcess.Data;
 using OnlinePaymentApp.Models;
 using OnlinePaymentApp.Models.ViewModels;
 using OnlinePaymentApp.Utility;
+using Stripe.Climate;
 
 namespace OnlinePaymentApp.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class OrderController : Controller
     {
 
@@ -26,7 +29,21 @@ namespace OnlinePaymentApp.Areas.Admin.Controllers
 
         public IActionResult Index(string status)
         {
-            IEnumerable<OrderHeader> OrderHeaders = _unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser");
+            IEnumerable<OrderHeader> OrderHeaders;
+
+            if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+            {
+                OrderHeaders = _unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser").ToList();
+            }
+            else
+            {
+
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                OrderHeaders = _unitOfWork.OrderHeader
+                    .GetAll(u => u.ApplicationUserId == userId, includeProperties: "ApplicationUser");
+            }
 
             switch (status)
             {
@@ -86,6 +103,52 @@ namespace OnlinePaymentApp.Areas.Admin.Controllers
 
 
             return RedirectToAction(nameof(Details), new { orderId = orderHeaderFromDb.Id });
+        }
+
+
+        [HttpPost]
+        [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
+        public IActionResult StartProcessing()
+        {
+            _unitOfWork.OrderHeader.UpdateStatus(OrderVM.OrderHeader.Id, SD.StatusInProcess);
+            _unitOfWork.Save();
+            TempData["Success"] = "Order Details Updated Successfully.";
+            return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
+        }
+
+        [HttpPost]
+        [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
+        public IActionResult ShipOrder()
+        {
+            if (string.IsNullOrEmpty(OrderVM.OrderHeader.TrackingNumber) || string.IsNullOrEmpty(OrderVM.OrderHeader.Carrier))
+            {
+                ModelState.AddModelError("orderheader.trackingnumber", "Field cannot be empty");
+                ModelState.AddModelError("orderheader.carrier", "Field cannot be empty");
+
+                // recalculate OrderVM
+                OrderVM TempOrderVM = new()
+                {
+                    OrderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == OrderVM.OrderHeader.Id, includeProperties: "ApplicationUser"),
+                    OrderDetail = _unitOfWork.OrderDetail.GetAll(u => u.OrderHeaderId == OrderVM.OrderHeader.Id, includeProperties: "Product")
+                };
+                TempData["Error"] = "Missing fields!";
+                return View("Details", TempOrderVM);
+            }
+
+            var orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == OrderVM.OrderHeader.Id);
+            orderHeader.TrackingNumber = OrderVM.OrderHeader.TrackingNumber;
+            orderHeader.Carrier = OrderVM.OrderHeader.Carrier;
+            orderHeader.OrderStatus = SD.StatusShipped;
+            orderHeader.ShippingDate = DateTime.Now;
+            if (orderHeader.PaymentStatus == SD.PaymentStatusDelayedPayment)
+            {
+                orderHeader.PaymentDueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(30));
+            }
+
+            _unitOfWork.OrderHeader.Update(orderHeader);
+            _unitOfWork.Save();
+            TempData["Success"] = "Order Shipped Successfully.";
+            return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
         }
 
 
