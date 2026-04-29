@@ -4,6 +4,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using OnlinePaymentApp.DataAccess.Repository.IRepository;
 using OnlinePaymentApp.Models;
+using OnlinePaymentApp.Utility;
 
 namespace OnlinePaymentApp.Areas.Customer.Controllers
 {
@@ -21,6 +22,14 @@ namespace OnlinePaymentApp.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (claim != null) //user logged in
+            {
+                HttpContext.Session.SetInt32(SD.SessionCart,
+                _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value).Count());
+            }
             List<Product> products = _unitOfWork.ProductRepository.GetAll(includeProperties: "Category").ToList();
             return View(products);
         }
@@ -57,6 +66,8 @@ namespace OnlinePaymentApp.Areas.Customer.Controllers
             {
                 //add cart record
                 _unitOfWork.ShoppingCart.Add(shoppingCart);
+                HttpContext.Session.SetInt32(SD.SessionCart,
+                _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId).Count() + 1);
             }
             TempData["success"] = "Cart updated successfully";
 

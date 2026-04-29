@@ -234,13 +234,14 @@ namespace OnlinePaymentApp.Areas.Customer.Controllers
             if (cartFromDb.Count <= 1)
             {
                 //remove that from cart
-                _unitOfWork.ShoppingCart.Remove(cartFromDb);
+                Remove(cartId);
             }
             else
             {
                 cartFromDb.Count -= 1;
                 _unitOfWork.ShoppingCart.Update(cartFromDb);
             }
+
 
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
@@ -250,6 +251,9 @@ namespace OnlinePaymentApp.Areas.Customer.Controllers
         {
             var cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId);
             _unitOfWork.ShoppingCart.Remove(cartFromDb);
+            HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCart
+                    .GetAll(u => u.ApplicationUserId == cartFromDb.ApplicationUserId).Count() - 1);
+
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
