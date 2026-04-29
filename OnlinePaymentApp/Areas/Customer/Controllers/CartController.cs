@@ -212,6 +212,7 @@ namespace OnlinePaymentApp.Areas.Customer.Controllers
                 .GetAll(u => u.ApplicationUserId == orderHeader.ApplicationUserId).ToList();
 
             _unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
+            HttpContext.Session.Remove(SD.SessionCart);
             _unitOfWork.Save();
 
 
